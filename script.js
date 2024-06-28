@@ -21,23 +21,36 @@ document.addEventListener("DOMContentLoaded", function() {
         currentSlide = n;
     }
 
-    // Function to start automatic slideshow
-    function startSlider() {
-        showSlide(currentSlide); // Show initial slide (first slide)
+    // Function to move to the next slide
+    function moveToNextSlide() {
+        showSlide(currentSlide + 1);
+        clearInterval(slideInterval); // Stop automatic slide interval
         slideInterval = setInterval(function() {
-            showSlide(currentSlide + 1);
-        }, 5000); // 7 seconds interval
+            moveToNextSlide();
+        }, 5000); // Restart automatic slideshow after manual navigation
     }
+
+    // Event listener for clicking anywhere on the document (excluding dots)
+    document.addEventListener("click", function(event) {
+        const clickedElement = event.target;
+        if (!clickedElement.closest(".dot")) {
+            moveToNextSlide();
+        }
+    });
 
     // Event listener for clicking on dots
     dots.forEach((dot, index) => {
         dot.addEventListener("click", function() {
             showSlide(index);
             clearInterval(slideInterval); // Stop automatic slide interval
-            startSlider(); // Restart automatic slideshow after manual click
+            slideInterval = setInterval(function() {
+                moveToNextSlide();
+            }, 5000); // Restart automatic slideshow after manual click
         });
     });
 
     // Start automatic slideshow initially
-    startSlider();
+    slideInterval = setInterval(function() {
+        moveToNextSlide();
+    }, 5000);
 });
