@@ -2,10 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const slides = document.querySelectorAll(".slide");
     const dots = document.querySelectorAll(".dot");
     let currentSlide = 0;
-
-    // Show the first slide and activate the first dot initially
-    slides[currentSlide].style.display = "block";
-    dots[currentSlide].classList.add("active");
+    let slideInterval;
 
     // Function to show a particular slide
     function showSlide(n) {
@@ -24,18 +21,23 @@ document.addEventListener("DOMContentLoaded", function() {
         currentSlide = n;
     }
 
-    // Event listeners for dots
+    // Function to start automatic slideshow
+    function startSlider() {
+        showSlide(currentSlide); // Show initial slide (first slide)
+        slideInterval = setInterval(function() {
+            showSlide(currentSlide + 1);
+        }, 5000); // 7 seconds interval
+    }
+
+    // Event listener for clicking on dots
     dots.forEach((dot, index) => {
         dot.addEventListener("click", function() {
             showSlide(index);
+            clearInterval(slideInterval); // Stop automatic slide interval
+            startSlider(); // Restart automatic slideshow after manual click
         });
     });
 
-    // Automatic slideshow (optional)
-    /*
-    setInterval(function() {
-        currentSlide = (currentSlide + 1) % slides.length;
-        showSlide(currentSlide);
-    }, 3000);
-    */
+    // Start automatic slideshow initially
+    startSlider();
 });
